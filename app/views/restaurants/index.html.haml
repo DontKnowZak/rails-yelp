@@ -1,13 +1,16 @@
-- if @restaurants.all.any?
-  - @restaurants.all.each do |restaurant|
+- if @restaurants.any?
+  - @restaurants.each do |restaurant|
     = link_to restaurant.name, restaurant_path(restaurant)
+    = restaurant.stars_rating
+    - if user_signed_in?
+      - if current_user.restaurants.include? restaurant
+        = link_to "Edit #{restaurant.name}", edit_restaurant_path(restaurant)
+        = link_to "Delete #{restaurant.name}", restaurant_path(restaurant), method: :delete
+      - if current_user.has_reviewed? restaurant
+      - else
+        = link_to "Review #{restaurant.name}", new_restaurant_review_path(restaurant)
     - restaurant.reviews.each do |review|
       = review.thoughts
-    = link_to "Edit #{restaurant.name}", edit_restaurant_path(restaurant)
-    = link_to "Delete #{restaurant.name}", restaurant_path(restaurant), method: :delete
-    = link_to "Review #{restaurant.name}", new_restaurant_review_path(restaurant)
-
 - else
   %h1 No restaurants yet
-
-%a(href='restaurants/new') Add a restaurant
+%a(href=new_restaurant_path) Add restaurant
