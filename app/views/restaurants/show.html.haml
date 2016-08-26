@@ -1,2 +1,9 @@
-%p= @restaurant.name
-%p= @restaurant.description
+%h1= @restaurant.name
+%h2= @restaurant.description
+
+%h3 Reviews
+- @restaurant.reviews.each do |review|
+  %p= review.thoughts
+  - if current_user.reviews.include? review
+    %p= link_to "Edit review", edit_restaurant_review_path(@restaurant, review)
+    %p= link_to "Delete review", restaurant_review_path(@restaurant, review), method: :delete

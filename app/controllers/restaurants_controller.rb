@@ -30,8 +30,12 @@ class RestaurantsController < ApplicationController
 
   def update
     @restaurant = Restaurant.find(params[:id])
-    @restaurant.update(restaurant_params)
-    redirect_to '/restaurants'
+    if current_user.restaurants.include? @restaurant
+      @restaurant.update(restaurant_params)
+      redirect_to '/restaurants'
+    else
+      redirect_to '/restaurants', alert: "You don't own this"
+    end
   end
 
   def destroy
